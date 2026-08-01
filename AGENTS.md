@@ -25,5 +25,5 @@ Python · （待定：sklearn / PyTorch 视数据集规模与任务而定）
 ## 当前状态（2026-08-01）
 - git 仓库已建，`.gitignore` 已配（忽略 `.idea/`、`data/`、`__pycache__`、模型大文件等）
 - 目录骨架就位，尚无算法代码
-- 远程：`github.com/luzhuojun120/github.git`（push 因网络被重置，待重试）
-- 下一步：确定数据集来源，在 `src/` 写数据预处理与进食检测原型
+- 远程：`github.com/luzhuojun120/github.git`（已 push 成功，与 origin/main 同步）
+- 下一步：① 建 `requirements/requirements.txt`；② 确定数据集来源；③ 在 `src/` 写数据预处理与进食检测原型
