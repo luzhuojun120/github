@@ -52,15 +52,10 @@ def window_features(window, fs=ACC_FS):
     ----
     np.ndarray, shape (5,) → [mean, std, max, min, 主频Hz]
     """
-    # >>> TODO(你来填) <<<
-    # 这些全是你 Day 4 / Day 5 写过的！
-    # 1) mean/std/max/min = np.mean/std/max/min(window)   ← Day4 window_stats
-    # 2) 主频: np.fft.fft(window) → 幅度 → 跳过 0Hz → 找最大 → freqs 定位 ← Day5 dominant_freq
     mean = np.mean(window)
     std = np.std(window)
     mx = np.max(window)
     mn = np.min(window)
-
 
     n = len(window)
     fft_vals = np.fft.fft(window)
@@ -88,8 +83,6 @@ def extract_features(windows, fs=ACC_FS):
     np.ndarray, shape (n_windows, 5)
         每行 = 一个窗口的特征
     """
-    # >>> TODO(你来填) <<<
-    # 思路：for 每个窗口 → window_features(w) → 收集 → np.array
     stats=[]
     for w in windows:
         stats.append(window_features(w,fs))

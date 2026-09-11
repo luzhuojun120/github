@@ -64,20 +64,8 @@ def build_dataset(subject="HNU21026"):
     print("餐列表前两个：", meals[:2])
     y = make_labels(starts, win_ms, meals)
     print("标签发布：吃饭", int(y.sum()), "窗/非吃饭", int((y == 0).sum()), "窗")
-    print(map_df.columns.tolist())
-    print(map_df1.columns.tolist())
     return X,y
 
 if __name__ == "__main__":
-    X,y=build_dataset()
-    print("X:",X.shape,"y分布：",int(y.sum()),"/",len(y))
-#print(repr())    # repr 会把隐形字符显形
-
-
-
-
-#for sliding_window(best_start,best_end,)
-#    cnt=0
-#    for (best_start,best_end) in meals:
-#print(map_df.columns.tolist())
-#print(map_df1.columns.tolist())
+    X, y = build_dataset()
+    print("X:", X.shape, "y分布：", int(y.sum()), "/", len(y))

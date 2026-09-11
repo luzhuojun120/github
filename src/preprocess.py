@@ -12,8 +12,8 @@ preprocess.py
         把一维信号切成二维数组 (窗口数, 窗口长度)
     normalize(windows, method="zscore")
         对窗口做归一化，消除量纲差异
-    make_labels(...)
-        （TODO）按饭段时间给每个窗口打"吃/没吃"标签
+    make_labels(window_starts, window_len, eat_events)
+        按饭段时间给每个窗口打"吃/没吃"标签
 
 用法示例：
     from preprocess import sliding_window, normalize
@@ -49,10 +49,6 @@ def sliding_window(signal, window_size, step):
     - 窗口起点从 0 开始，每次前进 step，直到放不下一个完整窗口为止
     - 若 signal 长度不足以容纳任何窗口，抛 ValueError
     """
-    # >>> TODO(你来实现) <<<
-    # 把你在 Day 3 写的逻辑放进来，并加一个"太短就报错"的检查：
-    # if len(signal) < window_size:
-    #     raise ValueError(f"信号长度 {len(signal)} 小于窗口长度 {window_size}")
     if len(signal) < window_size:
         raise ValueError(f"信号长度{len(signal)}小于窗口长度{window_size}")
     N=len(signal)
@@ -98,14 +94,14 @@ def normalize(windows, method="zscore"):
         raise ValueError(f"未知的 method: {method}（可选 'zscore' / 'minmax'）")
 
 
-def make_labels(window_starts,window_len, eat_events):
+def make_labels(window_starts, window_len, eat_events):
     """
-    （TODO · 下次会话实现）
     给每个窗口打"吃 / 没吃"标签。
 
-    参数（预计）
+    参数
     ----
     window_starts : 每个窗口起点对应的时间戳
+    window_len : 每个窗口时长（毫秒）
     eat_events : 饭段时间列表，如 [(start_ts1, end_ts1), (start_ts2, end_ts2), ...]
 
     返回

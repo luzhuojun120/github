@@ -50,11 +50,6 @@ def load_acc_gyro(txt_path):
     pandas.DataFrame，含列: ACC_TIME, ACC_X/Y/Z, GYRO_X/Y/Z
         只保留 ACC_TIME > 0 的行（跳掉 0 填充行），索引重置
     """
-    # >>> TODO(你来填) <<<
-    # 提示（3 步）：
-    # 1) df = pd.read_csv(txt_path, sep='\t')        # 读 53 列表
-    # 2) valid = df[df['ACC_TIME'] > 0]             # 筛有效行
-    # 3) return valid[ACC_GYRO_COLS].reset_index(drop=True)
     df=pd.read_csv(txt_path,sep='\t')
     valid=df[df['ACC_TIME']>0]
     return valid[ACC_GYRO_COLS].reset_index(drop=True)
