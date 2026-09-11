@@ -1,0 +1,14 @@
+# 进食检测比赛 baseline 依赖清单（2026-08-05 neat-freak 收尾建）
+# 版本未锁：数据集 8 月中旬公布后，按实际环境用 `pip freeze` 核定精确版本。
+# 以下库按已研究的参考代码（LoadFiles.ipynb / meal_detection_heuristic.ipynb）确定为必装。
+
+numpy
+pandas
+scipy
+scikit-learn
+matplotlib
+
+# 以下视数据集规模与最终模型选型再决定是否加入，先注释保留：
+# torch        # 若采用深度学习模型（DailyPatternRNN 类）
+# tensorflow
+# pywt         # 小波变换特征（IMU 频域分析可选）
