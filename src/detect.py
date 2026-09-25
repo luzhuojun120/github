@@ -5,8 +5,10 @@ import pandas as pd
 
 from notebooks.阶段4_baselines_最小可用 import X_test, y_train
 
-sys.path.insert(0,r"E:\workbuddy\进食检测比赛\scripts")
-sys.path.insert(0,r"E:\workbuudy\进食检测比赛\src")
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ROOT = os.path.dirname(_HERE)
+sys.path.insert(0, os.path.join(_ROOT, "scripts"))
+sys.path.insert(0, _HERE)
 
 from build_dataset import build_dataset
 from sklearn.model_selection import train_test_split

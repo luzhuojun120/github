@@ -18,6 +18,22 @@ def segment_meals(y_pred,starts,win_ms):
     if start_time is not None:
        segments.append((start_time,starts[i]+win_ms))
     return segments
+def merge_close(segments,gap_ms=180000):
+    """
+
+    :param segments:
+    :param gap_ms:
+    :return:
+    """
+    if not segments:
+        return []
+    out=[list(segments[0])]
+    for  s,e in segments[1:]:
+        if s-out[-1][1]<=gap_ms:
+            out[-1][1]=e
+        else:
+            out.append([s,e])
+    return[tuple(x)for x in out]
 if __name__=='__main__':
     y_pred=[0,0,0,1,1,1,0,0,1,1,0]
     starts=[1000,1100,1200,1300,1400,1500,1600,1700,1800,1900,2000]

@@ -24,8 +24,7 @@ import pandas as pd
 from data_loader import load_sensor_zip
 from preprocess import sliding_window, make_labels
 from features import extract_features, ACC_FS
-
-DATA = r"E:\workbuddy\进食检测比赛\data\raw"
+from paths import RAW as DATA
 MAP_CSV = os.path.join(DATA, "sensor_下载映射表.csv")
 MEAL_CSV = os.path.join(DATA, "mealinfo_标注表.csv")
 

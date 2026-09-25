@@ -28,8 +28,12 @@ data_loader.py
 作者：品食Panda 队 · 假菌
 """
 
+import os
 import pandas as pd
 import zipfile
+import io
+
+from paths import BASE
 
 
 ACC_GYRO_COLS = ["ACC_TIME", "ACC_X", "ACC_Y", "ACC_Z",
@@ -51,6 +55,7 @@ def load_acc_gyro(txt_path):
         只保留 ACC_TIME > 0 的行（跳掉 0 填充行），索引重置
     """
     df=pd.read_csv(txt_path,sep='\t')
+    df["ACC_TIME"] = pd.to_numeric(df["ACC_TIME"], errors='coerce')
     valid=df[df['ACC_TIME']>0]
     return valid[ACC_GYRO_COLS].reset_index(drop=True)
 def load_sensor_zip(zip_path):
@@ -60,19 +65,32 @@ def load_sensor_zip(zip_path):
     :return:返回与 load_acc_gyro 相同的 DataFrame
     """
     with zipfile.ZipFile(zip_path)as z:
-        names=z.namelist()
-        txt_name=[n for n in names if n.startswith("collect_data")][0]
-        with z.open(txt_name)as f:
-             df=pd.read_csv(f,sep='\t')
-    valid=df[df['ACC_TIME']>0]
-    return valid[ACC_GYRO_COLS].reset_index(drop=True)
+
+        txt_name=[n for n in z.namelist() if n.startswith("collect_data")][0]
+        try:
+            with z.open(txt_name)as f:
+                df=pd.read_csv(f,sep='\t')
+        except UnicodeDecodeError:
+            raw=z.read(txt_name)
+            for enc in ("gbk","utf-16","latin-1"):
+                try:
+                    df=pd.read_csv(io.BytesIO(raw),sep='\t',encoding=enc)
+                    break
+                except (UnicodeDecodeError,pd.errors.ParserError):
+                    continue
+            else:
+                raise
+        for c in ACC_GYRO_COLS:
+            df[c]=pd.to_numeric(df[c],errors="coerce")
+        valid=df[df['ACC_TIME']>0]
+        return valid[ACC_GYRO_COLS].reset_index(drop=True)
 
 
 
 
 if __name__ == "__main__":
     # ===== 自测：跑通即模块可用 =====
-    demo = r"E:\workbuddy\进食检测比赛\data\_inspect\collect_data28_1785586214_1785645732.txt"
+    demo = os.path.join(BASE, "data", "_inspect", "collect_data28_1785586214_1785645732.txt")
     acc_gyro = load_acc_gyro(demo)
     print("ACC/GYRO 有效采样数:", len(acc_gyro))       # 期望 ~46 万行
     print("前 3 行:")

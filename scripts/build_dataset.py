@@ -6,18 +6,21 @@ STEP=250
 
 
 
-sys.path.insert(0,r"E:\workbuddy\进食检测比赛\src")
+_HERE = os.path.dirname(os.path.abspath(__file__))
+_ROOT = os.path.dirname(_HERE)
+sys.path.insert(0, os.path.join(_ROOT, "src"))
 import numpy as np
 import pandas as pd
 from data_loader import load_sensor_zip
 from preprocess import sliding_window, make_labels
 from features import extract_features, ACC_FS
+from paths import RAW
 def build_dataset(subject="HNU21026"):
-    map_df = pd.read_csv(r"E:\workbuddy\进食检测比赛\data\raw\sensor_下载映射表.csv", encoding='utf-8-sig')
+    map_df = pd.read_csv(os.path.join(RAW, "sensor_下载映射表.csv"), encoding='utf-8-sig')
     print(map_df.head(), map_df.shape)
     hnu = map_df[map_df['externalid'] == "HNU21026"]
     print("HNU21026的zip数：", len(hnu))
-    map_df1 = pd.read_csv(r"E:\workbuddy\进食检测比赛\data\raw\mealinfo_标注表.csv")
+    map_df1 = pd.read_csv(os.path.join(RAW, "mealinfo_标注表.csv"))
     print(map_df1.head(), map_df1.shape)
     hnu1 = map_df1[map_df1['externalid'] == "HNU21026"]
     print("HNU21016的zip数：", len(hnu1))
@@ -46,7 +49,7 @@ def build_dataset(subject="HNU21026"):
     chosen = zip_path[best_idx]
     print("选中zip", chosen)
     print("选zip", best_idx, "覆盖", best_cnt, "餐")
-    local_zip = os.path.join(r"E:\workbuddy\进食检测比赛\data\raw\sensorData", os.path.basename(chosen))
+    local_zip = os.path.join(RAW, "sensorData", os.path.basename(chosen))
     acc = load_sensor_zip(local_zip)
     print("读入采样：", acc.shape)
     x = acc['ACC_X'].to_numpy()
