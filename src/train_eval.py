@@ -7,7 +7,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import f1_score, precision_score, recall_score
 from scipy.ndimage import gaussian_filter1d
-from segment_meals import segment_meals, merge_close
+from segment_meals import segment_meals, merge_close, filter_short
 from evaluate import evaluate,iou
 WINDOW = 500
 ACC_FS = 105
@@ -76,7 +76,7 @@ def train_and_eval(data,train_ids,test_ids):
     r=recall_score(y_te,y_pred)
     f1=f1_score(y_te,y_pred)
     return clf, p,r,f1
-def eval_event(clf,sub,thresh=0.4,sigma=3,gap_ms=300000):
+def eval_event(clf,sub,thresh=0.5,sigma=3,gap_ms=300000,min_dur_ms=60000):
     prob=clf.predict_proba(sub["X"])[:,1]
     starts=sub["starts"]
     y_true=sub["y"]
@@ -90,10 +90,11 @@ def eval_event(clf,sub,thresh=0.4,sigma=3,gap_ms=300000):
         yp=(ps>=thresh).astype(int)
         segs=segment_meals(yp,starts[a:b],WINDOW_MS)
         segs=merge_close(segs,180000)
+        segs=filter_short(segs,min_dur_ms)      # ← 最短段过滤只作用于「预测」
         pred_segs.extend(segs)
         yt=y_true[a:b]
         segs=segment_meals(yt,starts[a:b],WINDOW_MS)
-        true_segs.extend(segs)
+        true_segs.extend(segs)                  # ← 真值一律不过滤（真值不可加工）
     return pred_segs,true_segs
 def match_count(pred_segs,true_segs,thresh=0.25):
     """

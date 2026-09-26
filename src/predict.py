@@ -8,7 +8,7 @@ from paths import MODEL, BASE
 from data_loader import load_sensor_zip
 from preprocess import sliding_window
 from features import extract_features
-from segment_meals import segment_meals, merge_close
+from segment_meals import segment_meals, merge_close, filter_short
 INPUT_DIR  = os.path.join(BASE, "test_data")
 OUTPUT_CSV = os.path.join(BASE, "answer.csv")
 def load_model():
@@ -42,6 +42,7 @@ def postprocess(prob, starts, params):
     sigma = params["SIGMA"]
     gap_ms = params["SPLIT_GAP_MS"]
     merge_ms = params["MERGE_GAP_MS"]
+    min_dur_ms = params.get("MIN_DURATION_MS", 60000)   # 旧模型没有这项时用默认值
     win_ms = (params["WINDOW"] / params["ACC_FS"]) * 1000
     segs_all = []
     for a, b in split_by_gap(starts, gap_ms):
@@ -49,6 +50,7 @@ def postprocess(prob, starts, params):
         yp = (ps >= thresh).astype(int)
         segs = segment_meals(yp, starts[a:b], win_ms)
         segs = merge_close(segs, merge_ms)
+        segs = filter_short(segs, min_dur_ms)           # 丢掉太短的段（多为误报）
         segs_all.extend(segs)
     return segs_all
 

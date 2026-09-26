@@ -29,10 +29,11 @@ IMU_AXES = ["ACC_X", "ACC_Z", "ACC_Y", "GYRO_X", "GYRO_Y", "GYRO_Z"]
 STEP = 250
 
 # ---- 后处理参数（与 train_eval.eval_event 默认值保持一致） ----
-THRESH = 0.4              # 平滑后的判正阈值
+THRESH = 0.5              # 平滑后的判正阈值（2026-09-26 由 0.4 上调，实测 F1 0.1651 → 0.2462）
 SIGMA = 3                 # 高斯平滑 sigma
 SPLIT_GAP_MS = 300000     # 段内平滑的切分间隔（5 分钟，实测同饭内最大缝隙 2.1 分钟）
 MERGE_GAP_MS = 180000     # 饭段合并间隔（180 秒，官方后处理要求）
+MIN_DURATION_MS = 60000   # 最短饭段（60 秒 → 物理先验：一次进食至少持续 1 分钟）
 MIN_POSITIVE = 100        # 正样本少于该数的受试者不参与训练
 
 
@@ -65,9 +66,10 @@ def train_final(min_positive=MIN_POSITIVE):
             "SIGMA": SIGMA,
             "SPLIT_GAP_MS": SPLIT_GAP_MS,
             "MERGE_GAP_MS": MERGE_GAP_MS,
+            "MIN_DURATION_MS": MIN_DURATION_MS,
         },
         "meta": {
-            "version": "1.0",
+            "version": "1.1",
             "trained_at": datetime.datetime.now().isoformat(timespec="seconds"),
             "n_subjects": len(ids),
             "subject_ids": ids,
