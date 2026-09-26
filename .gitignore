@@ -35,3 +35,24 @@ Thumbs.db
 notebooks/*.png
 队友交接包*/
 队友_开工包*
+
+# ===== 模型权重（2026-09-26 补）=====
+# model.pkl 546MB / model.pkl.gz 118MB —— 远超 GitHub 单文件 100MB 上限
+*.pkl
+*.pkl.gz
+
+# ===== 运行产物（可随时重新生成，不进版本库）=====
+answer.csv
+result.csv
+
+# ===== 临时脚本与中间产物（_ 前缀 = 一次性）=====
+_*.py
+_*.txt
+_*.json
+_*.bak
+*.bak
+
+# ===== 交付/打包产物 =====
+dist/
+build/
+*.spec
